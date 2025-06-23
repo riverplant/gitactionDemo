@@ -1,0 +1,148 @@
+Job: 建立或共享自動化工作
+      在同一個Runner執行的一族Step
+      這些工作默認是平行執行，也可以設定循環執行
+      儅其中過一個Job失敗，下一個Job不會執行
+
+Step:
+     在Job内可以執行命令獨立工作
+     可以是一個命令或者一個Action
+     同一個Job内所有Action共享資料
+
+Event: 觸發程序
+     出發自動化工作留的功能
+
+
+Runner:
+     負責執行自動化程序的服務器
+
+Continue Integration and Depolyment:
+
+Restore(還原)
+
+
+Build(建置)
+
+
+
+Test(測試)
+
+-------------------------------------Workflows--------------------------------------------------------
+Event --->   Jobs(Job1{ Step1 Actiong ---> Step2 Action  })   ----> Runner{Run Action   RunAction}
+
+Demo: Yml
+
+   
+
+
+
+
+
+----------------------------------23062025---------------------------------------------------------------------
+1. GitHub Actions
+
+    認識 .github/workflows/*.yml 的結構與語法：
+
+    on:（事件觸發器）→ push, pull_request, schedule
+
+    jobs: → 每個 job 是一個虛擬機環境（如 ubuntu-latest）
+
+    steps: → 每步可以是 shell 命令或現成 action
+
+2. Actions & CI
+
+   構建、測試與快取：
+
+   常用 actions：
+
+   actions/checkout@v4 → 拉取代碼
+
+   actions/setup-java@v4 / setup-node → 設定語言環境
+
+   自動跑 mvn test / npm test / pytest
+
+   使用 actions/cache 快取依賴項（如 Maven .m2）
+
+   jobs:
+     build:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-java@v4
+           with:
+             java-version: '17'
+         - run: mvn test
+
+
+3. CD & Release management
+
+   如何從 CI 過渡到部署（CD）：
+
+   發佈 artifact：
+
+   actions/upload-artifact, download-artifact
+
+   gh release create 自動發佈版本
+
+   部署到：
+
+   Docker Hub / AWS / GCP / K8s / FTP / 自己的伺服器（透過 SSH）
+
+4. Self-hosted runners
+
+   在自己電腦、VM、內部網路內部署 runner：
+
+   適合：
+
+   要連內部網路資源（如資料庫）
+
+   有大量構建工作（省 GitHub Action 費用）
+
+   安裝方式：GitHub → Settings → Actions → Runners
+
+
+
+5. Build Management
+
+   多模組專案 / Matrix build：
+
+   多版本測試（ex. Java 11 + 17）
+
+   多服務（微服務）
+
+   strategy:
+     matrix:
+       java: [11, 17]
+
+
+
+6. Package Management
+
+   支援以下封包倉庫：
+
+   GitHub Container Registry (ghcr.io)
+
+   GitHub Packages (Maven, npm, NuGet)
+
+    - name: Publish Docker Image
+      run: |
+        docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+        docker build -t ghcr.io/<owner>/<image>:latest .
+        docker push ghcr.io/<owner>/<image>:latest
+
+
+
+7. Secrets Management
+
+  安全存放敏感資訊：
+
+  可透過 repo 的 Settings → Secrets 或 Environment Secrets
+
+  常見的用途：
+
+  DockerHub 密碼
+
+  SSH 私鑰
+
+  部署 token
+
+  run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}

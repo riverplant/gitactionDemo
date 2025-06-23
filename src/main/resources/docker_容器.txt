@@ -1,0 +1,64 @@
+docker run --rm -dti [鏡像name]
+
+docker ps
+
+ps(Linux查看進程)
+
+
+容器創建之後，會存儲在宿主機上:
+   linux: /var/lib/docker/containers/
+
+容器生命周期
+
+docker create
+
+docker run
+
+docker start
+
+
+docker restart
+
+
+docker pause
+
+docker unpause
+
+docker stop : 給出退出時間/  docker kill ： 直接退出
+
+docker rm (created exited狀態)
+
+docker rm -f (running 和 paused狀態下)
+
+
+service docker stop  會導致所有的容器異常關閉
+
+
+容器生命周期和管理
+ 1. docker create [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+    docker create --name  my-nginx(指定鏡像名稱) nginx
+
+   IMAGE：要使用的映像（例如 nginx, ubuntu）
+
+    COMMAND：容器啟動後要執行的主命令（可選）
+
+   在 docker create 或 docker run 命令中，COMMAND 是指：容器啟動時要執行的程式或指令，也就是 Dockerfile 中的 CMD 或 ENTRYPOINT 的覆寫版本。
+
+
+    [ARG...]：傳給該命令的參數（可選）
+
+    docker create ubuntu echo "Hello, Docker!"
+
+    這表示容器啟動後執行： echo "Hello, Docker!"
+
+    -t: --tty: 分配一個TTY, 分配一個虛擬終端
+
+    -i， --interactive     即使沒有鏈接，也保持STDIN打開
+
+
+容器信息查看
+
+
+
+容器運行時操作
