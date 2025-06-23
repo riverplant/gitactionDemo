@@ -1,18 +1,27 @@
-name: Demo CI
+name: Java CI with Maven
 
 on:
   push:
     branches:
       - master
-  workflow_dispatch:
+  workflow_dispatch:   # ✨ 新增這一行，讓你可以手動點擊 Run workflow
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Say Hello
-        run: echo "👋 Hello from GitHub Actions!"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn -B clean install
+
+      - name: Run tests
+        run: mvn test
